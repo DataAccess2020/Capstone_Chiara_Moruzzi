@@ -12,21 +12,32 @@ italian_MP_under40 = lists_members(
   parse = TRUE,
 )
 
+# UNDER 40 MEMBERS OF PARLIAMENT
 
 #string vector with all under
-MP_under40_names = c(italian_MP_under40$name)
+MP_under40_names = c(italian_MP_under40$name) #names
 print(MP_under40_names)
 
-MP_under40_t_handle = c(italian_MP_under40$screen_name)
+MP_under40_t_handle = c(italian_MP_under40$screen_name) #twitter handles
 print(MP_under40_t_handle)
+
+MP_under40_followers = c(italian_MP_under40$followers_count) #numebr of followers
+print(MP_under40_followers)
+
+MP_under40_tweets = c(italian_MP_under40$statuses_count) #number of tweets
+print(MP_under40_tweets)
 
 MP_under40_names[24] # ok, now we can iterate with a general function
 MP_under40_t_handle[24]
 
-#I create a dataframe containing all the names with the corresponding twitter handles of all the under 40 years old MPs who have twitter
-DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle)
+#I create a dataframe containing all the names with the corresponding twitter handles, number of followers 
+#and number of tweets of all the under 40 years old MPs who have twitter
+DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle, MP_under40_followers, MP_under40_tweets)
 
 #TWEETS EXTRACTION
+
+
+
 
 
 
