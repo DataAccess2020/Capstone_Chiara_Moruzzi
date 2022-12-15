@@ -36,6 +36,33 @@ DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle, MP_under40_follow
 
 #TWEETS EXTRACTION
 
+#first try
+
+#extracts two tweets per account in the list
+
+prova <- get_timelines(
+  user = MP_under40_t_handle,
+  n = 2,
+  parse = TRUE,
+  verbose = TRUE
+)
+
+
+#now I can download all the tweets I need from July to September 2022
+
+get_timelines(
+  user = NULL,
+  n = 100,
+  since_id = NULL,
+  max_id = NULL,
+  home = FALSE,
+  parse = TRUE,
+  check = TRUE,
+  retryonratelimit = TRUE,
+  verbose = TRUE,
+  token = NULL,
+  ...
+)
 
 
 
