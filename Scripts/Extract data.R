@@ -24,15 +24,15 @@ print(MP_under40_t_handle)
 MP_under40_followers = c(italian_MP_under40$followers_count) #numebr of followers
 print(MP_under40_followers)
 
-MP_under40_tweets = c(italian_MP_under40$statuses_count) #number of tweets
-print(MP_under40_tweets)
+MP_under40_n_tweets = c(italian_MP_under40$statuses_count) #number of tweets
+print(MP_under40_n_tweets)
 
 MP_under40_names[24] # ok, now we can iterate with a general function
 MP_under40_t_handle[24]
 
 #I create a dataframe containing all the names with the corresponding twitter handles, number of followers 
 #and number of tweets of all the under 40 years old MPs who have twitter
-DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle, MP_under40_followers, MP_under40_tweets)
+DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle, MP_under40_followers, MP_under40_n_tweets)
 
 #TWEETS EXTRACTION
 
@@ -47,27 +47,17 @@ prova <- get_timelines(
   verbose = TRUE
 )
 
-
 #now I can download all the tweets I need from July to September 2022
 
-get_timelines(
-  user = NULL,
-  n = 100,
-  since_id = NULL,
-  max_id = NULL,
-  home = FALSE,
-  parse = TRUE,
-  check = TRUE,
-  retryonratelimit = TRUE,
-  verbose = TRUE,
-  token = NULL,
-  ...
-)
+under40_tweets <- for (i in seq_along(italian_MP_under40)){
+ under40_tweets = get_timelines(user = italian_MP_under40[[i]],
+                                n = Inf,
+                                retryonratelimit = T,
+                                parse = TRUE,
+                                verbose = TRUE,
+ Sys.sleep(0.5)) %>% 
+  dplyr::filter(created_at >= "2022-07-21" & created_at<="2022-09-24")
+}
 
-
-
-
-
-
-
+under40_t_text <- c(under40_tweets$full_text)
 

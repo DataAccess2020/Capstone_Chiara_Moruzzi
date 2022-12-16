@@ -1,5 +1,5 @@
 library(rtweet)
-library(twitteR)
+library(stringr)
 library(tidyverse)
 
 
