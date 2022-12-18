@@ -125,3 +125,36 @@ for (i in seq_along(url_A[[i]])) {
   
   Sys.sleep(0.5)  # We use a sys.sleep of 0.5 seconds to avoid being banned from the server
 }
+
+#DOWNLOAD POLITELY FUNCTION
+
+
+download_politely <- function(from_url, to_html, my_email, my_agent = R.Version()$version.string) {
+  
+  require(httr)
+  
+  stopifnot(is.character(from_url))
+  stopifnot(is.character(to_html))
+  stopifnot(is.character(my_email))     # Only character strings are allowed
+  
+  tweets_req <-httr::GET(url = italian_MP_over40[i],   # GET function for all the pages
+                        add_headers(
+                          From = email, 
+                          `User-Agent` = R.Version()$version.string
+                        )
+  )
+  
+  if (httr::http_status(tweets_req)$message == "Success: (200) OK") {
+    bin <- content(tweets_req, as = "raw")
+    writeBin(object = bin, con = to_html)
+  } else {
+    cat("Houston, we have a problem!")
+  }
+}
+
+
+
+
+
+
+
