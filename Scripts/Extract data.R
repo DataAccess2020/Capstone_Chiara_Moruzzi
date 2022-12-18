@@ -101,10 +101,30 @@ over40_tweets <- for (i in seq_along(italian_MP_over40)){
                                  n = Inf,
                                  retryonratelimit = T,
                                  parse = TRUE,
-                                 verbose = TRUE,
-                                 Sys.sleep(0.5)) %>% 
+                                 verbose = TRUE) %>% 
     dplyr::filter(created_at >= "2022-07-21" & created_at<="2022-09-24")
 }
 
 over40_t_text <- c(over40_tweets$full_text)
+
+## tweets download
+
+setwd ("C:\\Users\\chiar\\Desktop\\Università\\DAPS&CO\\DATA_ACCESS\\CAPSTONE\\Capstone_Chiara_Moruzzi")
+dir.create("Tweets MPs over 40")
+
+for (i in seq_along(italian_MP_over40)) {
+  cat(i, " ")
+  download_politely(from_url = italian_MP_over40[i], 
+                    to_html = here::here("Tweets MPs over 40"), 
+                    my_email = email)
+  
+  Sys.sleep(0.5)  # We use a sys.sleep of 0.5 seconds to avoid being banned from the server
+}
+
+
+
+
+
+
+
 

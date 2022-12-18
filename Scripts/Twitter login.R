@@ -1,6 +1,7 @@
 library(rtweet)
 library(stringr)
 library(tidyverse)
+library(dplyr)
 
 
 #authentication 
