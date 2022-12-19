@@ -52,8 +52,15 @@ print(pr_test_over)
 
 pr_dat <- tibble(pr_under40,pr_over40)
 
-age <- unlist(c("under 40", "over 40"))
-print(age)
+install.packages("expss") 
+install.packages("labelled")
+
+
+library(expss)
+library(labelled)
+
+age <- unlist(c(0, 1))
+is.numeric(age)
 
 n_sm <- unlist(c(n_sm_under40, n_sm_over40))
 tot_tw <- unlist(c(total_under40, total_over40))
@@ -62,11 +69,28 @@ pr_sm <- n_sm/tot_tw
 
 sum_tab <- tibble(age, n_sm, tot_tw, pr_sm)
 
-group_by(sum_tab$age) %>% 
-ggplot (data=sum_tab, aes(x=pr_sm, y=tot_tw))+
-  geom_histogram()
+# set variable labels
+var_lab(sum_tab$age) <- "Age of the MPs (2 categories: under and over 40 years old)" 
+var_lab(sum_tab$n_sm) <- "Number of tweets about minimum wage" 
+var_lab(sum_tab$tot_tw) <- "Total number of tweets"
+var_lab(sum_tab$pr_sm) <- "proportion of tweets about minimum wage on total"
 
+print (sum_tab$age)
 
+# set value labels
+val_lab(sum_tab$age) <- make_labels("0 under 40
+                                    1 over 40")
+val_lab(sum_tab$age)
+
+# now that I have a numeric variable I can plot the results grouped by age
+
+group_by(sum_tab, age) %>% 
+  ggplot(aes(x=sum_tab$n_sm, y=sum_tab$tot_tw))+
+  geom_bar()
+
+group_by(sum_tab, age) %>% 
+  ggplot(aes(x=sum_tab$pr_sm))+
+  geom_()
 
 
 
