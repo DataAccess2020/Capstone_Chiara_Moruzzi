@@ -3,6 +3,7 @@ library(stringr)
 library(tidyverse)
 library(dplyr)
 
+options(scipen=999)
 
 #authentication 
 aut <- rtweet_app()

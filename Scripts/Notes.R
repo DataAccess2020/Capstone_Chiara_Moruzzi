@@ -58,6 +58,10 @@ dat_aiello <- tibble(
   
 )
 
+
+#it doesn't work for all the MPs because very few twitter handles are included and the date of birth is part of a text 
+#that I can't isolate and convert into a numeric variable for age
+
 # for loop to extract twitter handles and personal data for all the politicians
 
 url_gen <- "https://www.camera.it/leg19/28"
