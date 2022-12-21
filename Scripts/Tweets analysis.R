@@ -88,8 +88,6 @@ ggplot(sum_tab, aes(fill=age,y=pr_sm, x=n_sm)) +
   geom_bar(position="stack", stat="identity")+
   theme_bw()
 
-# I still need to fix labels and the legend
-
 
 
 
