@@ -85,7 +85,8 @@ val_lab(sum_tab$age)
 # now that I have a numeric variable I can plot the results grouped by age
 
 ggplot(sum_tab, aes(fill=age,y=pr_sm, x=n_sm)) + 
-  geom_bar(position="stack", stat="identity")
+  geom_bar(position="stack", stat="identity")+
+  theme_bw()
 
 # I still need to fix labels and the legend
 
