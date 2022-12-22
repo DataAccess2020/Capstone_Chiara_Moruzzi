@@ -1,5 +1,7 @@
 #GRAPH
 
+#to visualize the results in a better way I plot the data
+
 library(hrbrthemes)
 library(viridis)
 library(forcats)
@@ -9,7 +11,7 @@ ggplot(sum_tab, aes(fill=factor(age),y=pr_sm, x=n_sm)) +
   scale_color_manual(values = c("yellow", "red"), "Age")+
   xlab("Tweets about minimum wage")+
   scale_x_discrete()+
-  ylab("Proportion")+
+  ylab("Proportion on total numebr of tweets")+
   theme(legend.position = "bottom")+
   scale_fill_manual(
   values = c("gold", "indianred3"),

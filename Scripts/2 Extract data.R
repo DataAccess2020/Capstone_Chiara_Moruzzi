@@ -1,4 +1,6 @@
-#list download
+# DATA EXTRACTION
+
+#first, I create an object containing information about the members of the first list I created
 
 italian_MP_under40 = lists_members(
   list_id = "1601560531244093440",
@@ -59,7 +61,10 @@ under40_tweets <- for (i in seq_along(italian_MP_under40)){
   dplyr::filter(created_at >= "2022-07-21" & created_at<="2022-09-24")
 }
 
+#I put all the tweets' text inside a dataframe
 under40_t_text <- c(under40_tweets$full_text)
+
+#now I repeat the same operation for the other list
 
 # OVER 40 MEMBERS OF PARLIAMENT
 

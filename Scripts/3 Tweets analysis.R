@@ -1,5 +1,8 @@
 ## TWEETS ANALYSIS
 
+#one group at a time, I extract all the tweets containing the word "salario". I chose to use the word "salario" instead of "salario minimo" or #salariominimo
+#because after a few attempts I realized this was the best way to capture all the tweets about this issue. In each case the regex "salario" returns a tweet 
+#about minimum wage; using one of the two keywords I mentioned would have report only a part of the total amount of tweets and retweets about this topic.
 
 #UNDER 40
 under40_sm <- str_detect(under40_t_text, pattern = "salario")
@@ -7,9 +10,6 @@ under40_sm <- str_detect(under40_t_text, pattern = "salario")
 tweets="salario"
 under40_sm = under40_t_text %>% 
   str_subset(tweets)
-
-under40_sm %>% 
-  str_extract(under40_t_text)
 
 print(under40_sm) #20 out of 3797
 
@@ -27,6 +27,11 @@ over40_sm %>%
 
 print(over40_sm) #120 out of 20582
 
+#now that I have the number of tweets about minimum wage, I can evaluate and compare the proportion
+#between the two groups; To do that, i create a specific object containing the number of tweets about
+#minimum wage and an object with the total number of tweets. Finally I create an object to calculate and
+#store the proportion divided by group.
+
 n_sm_under40 <- 20
 n_sm_over40 <- 120
 
@@ -39,6 +44,8 @@ pr_over40 <- n_sm_over40/total_over40
 
 #PROP TEST
 
+#I test the significance of the results obtained through a pr test
+
 pr_test_under <- prop.test(n_sm_under40, total_under40, p = NULL, alternative = c("two.sided", "less", "greater"), conf.level = 0.95, correct = TRUE)
 print(pr_test_under)
 
@@ -46,15 +53,11 @@ print(pr_test_under)
 pr_test_over <- prop.test(n_sm_over40, total_over40, p = NULL, alternative = c("two.sided", "less", "greater"), conf.level = 0.95, correct = TRUE)
 print(pr_test_over)
 
+#the proportion is very small, much smaller than I expected, but the result semm to be statistically significant and against the research hypothesis
 
-
-# GRAPH
+#data managing
 
 pr_dat <- tibble(pr_under40,pr_over40)
-
-install.packages("expss") 
-install.packages("labelled")
-
 
 library(expss)
 library(labelled)
@@ -73,7 +76,7 @@ sum_tab <- tibble(age, n_sm, tot_tw, pr_sm)
 var_lab(sum_tab$age) <- "Age of the MPs (2 categories: under and over 40 years old)" 
 var_lab(sum_tab$n_sm) <- "Number of tweets about minimum wage" 
 var_lab(sum_tab$tot_tw) <- "Total number of tweets"
-var_lab(sum_tab$pr_sm) <- "proportion of tweets about minimum wage on total"
+var_lab(sum_tab$pr_sm) <- "Proportion of tweets about minimum wage on total"
 
 print (sum_tab$age)
 
@@ -84,9 +87,6 @@ val_lab(sum_tab$age)
 
 # now that I have a numeric variable I can plot the results grouped by age
 
-ggplot(sum_tab, aes(fill=age,y=pr_sm, x=n_sm)) + 
-  geom_bar(position="stack", stat="identity")+
-  theme_bw()
 
 
 

@@ -3,9 +3,9 @@ library(stringr)
 library(tidyverse)
 library(dplyr)
 
-options(scipen=999)
+options(scipen=999) #removes scientific notation
 
-#authentication 
+#authentication to Twitter API as default
 aut <- rtweet_app()
 auth_save(aut, "chiaramoruzzi")
 
