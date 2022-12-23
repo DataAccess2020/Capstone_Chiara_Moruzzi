@@ -2,7 +2,7 @@
 
 #one group at a time, I extract all the tweets containing the word "salario". I chose to use the word "salario" instead of "salario minimo" or #salariominimo
 #because after a few attempts I realized this was the best way to capture all the tweets about this issue. In each case the regex "salario" returns a tweet 
-#about minimum wage; using one of the two keywords I mentioned would have report only a part of the total amount of tweets and retweets about this topic.
+#about minimum wage; using one of the two keywords I mentioned would have reported only a part of the total amount of tweets and retweets about this topic.
 
 #UNDER 40
 under40_sm <- str_detect(under40_t_text, pattern = "salario")

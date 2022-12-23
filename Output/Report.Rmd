@@ -6,6 +6,8 @@ date: "2022-12-22"
 output: html_document
 ---
 
+<https://github.com/DataAccess2020/Capstone_Chiara_Moruzzi>
+
 ## Introduction
 
 The aim of my small research is to test whether younger politicians are more or less interest about the topic of the introduction of a legal minimum wage in Italy. To do so, I will examine the tweets of members of the Italian *Camera dei Deputati* divided in two age groups: under and over forty years old. I chose to focus on a three month period of time, which goes from 21 July 2022 (the day of the Draghis's Government crisis) to 24 September 2022 (the day before the elections for the XIX Legislatura).
@@ -28,6 +30,8 @@ First of all I created two lists containing all 400 0f the Italian MPs separated
 
 - I could not iterate the function to create a for loop or to use `lapply()` because the URL of the webpage changed based on letters and not number. I tried many times but I could not overcome this obstacle (example: <https://www.camera.it/leg19/28> is the link for page A, <https://www.camera.it/leg19/28?lettera=B> is the link for page B and so on).
 
+## Workflow
+
 After authenticating to Twitter API, I downloaded information about each list members and put it in a specific summary table for both age groups. The two dataframes contain the following information: screen names, twitter handles, number of tweets and number of followers.
 
 ```{r setup, include=FALSE, eval=TRUE}
@@ -38,8 +42,13 @@ knitr::opts_knit$set(root.dir = "C:\\Users\\chiar\\Desktop\\Università\\DAPS&CO
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, eval=TRUE}
 library(rtweet)
 library(stringr)
+library(expss)
+library(rio)
+library(labelled)
 library(tidyverse)
-library(dplyr)
+library(hrbrthemes)
+library(here)
+library(forcats)
 ```
 
 ```{r, eval=TRUE, echo=TRUE}
@@ -92,16 +101,104 @@ MP_over40_n_tweets = c(italian_MP_over40$statuses_count)
 DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle, MP_under40_followers, MP_under40_n_tweets)
 ```
 
+Now that I have the two dataframes with all the information I need, I can extract tweets and evaluate the proportion of those about minimum wage on the total number of tweets. Then, I create a specific dataframe (then unlisted) for each age group containing only the text of the tweets downloaded.
+
+```{r, eval=FALSE, echo=TRUE}
+under40_tweets <- for (i in seq_along(italian_MP_under40)){
+ under40_tweets = get_timelines(user = italian_MP_under40[[i]],
+                                n = Inf,
+                                retryonratelimit = T,
+                                parse = TRUE,
+                                verbose = TRUE,
+ Sys.sleep(0.5)) %>% 
+  dplyr::filter(created_at >= "2022-07-21" & created_at<="2022-09-24")
+}
+
+under40_t_text <- c(under40_tweets$full_text)
+```
+
+```{r, eval=FALSE, echo=TRUE}
+over40_tweets <- for (i in seq_along(italian_MP_over40)){
+  over40_tweets = get_timelines(user = italian_MP_over40[[i]],
+                                 n = Inf,
+                                 retryonratelimit = T,
+                                 parse = TRUE,
+                                 verbose = TRUE) %>% 
+    dplyr::filter(created_at >= "2022-07-21" & created_at<="2022-09-24")
+}
+
+over40_t_text <- c(over40_tweets$full_text)
+```
+
+```{r, eval=FALSE, echo=TRUE}
+unl_t_over <- unlist(over40_t_text)
+unl_t_under <- unlist(under40_t_text)
+```
+
+One group at a time, I extract all the tweets containing the word "salario". I chose to use the word "salario" instead of "salario minimo" or #salariominimo because after a few attempts I realized this was the best way to capture all the tweets about this issue. In each case the regular expression "salario" returns a tweet about minimum wage; using one of the two keywords I mentioned before would have reported only a part of the total amount of tweets and retweets about this topic.
+
+```{r, eval=FALSE, echo=TRUE}
+#UNDER 40
+under40_sm <- str_detect(under40_t_text, pattern = "salario")
+
+tweets="salario"
+under40_sm = under40_t_text %>% 
+  str_subset(tweets)
+
+print(under40_sm) #20 out of 3797
 
 
+#OVER 40
+
+over40_sm <- str_detect(over40_t_text, pattern = "salario")
+
+tweets="salario"
+over40_sm = over40_t_text %>% 
+  str_subset(tweets)
+
+over40_sm %>% 
+  str_extract(over40_t_text)
+
+print(over40_sm) #120 out of 20582
+```
+
+Now that I have the number of tweets about minimum wage, I can evaluate and compare the proportion between the two groups; To do that, i create a specific object containing the number of tweets about minimum wage and an object with the total number of tweets. Finally I create an object to calculate and store the proportion divided by group.
+
+```{r, eval=TRUE, echo=FALSE}
+n_sm_under40 <- 20
+n_sm_over40 <- 120
+
+total_under40 <- 3797
+total_over40 <- 20582
+
+pr_under40 <- n_sm_under40/total_under40
+pr_over40 <- n_sm_over40/total_over40
+```
+
+I test the significance of the results obtained through a pr test
+
+```{r, eval=TRUE, echo=FALSE}
+pr_test_under <- prop.test(n_sm_under40, total_under40, p = NULL, alternative = c("two.sided", "less", "greater"), conf.level = 0.95, correct = TRUE)
+print(pr_test_under)
 
 
+pr_test_over <- prop.test(n_sm_over40, total_over40, p = NULL, alternative = c("two.sided", "less", "greater"), conf.level = 0.95, correct = TRUE)
+print(pr_test_over)
+``` 
 
+The proportion is very small, much smaller than I expected, but the results seem to be statistically significant and against the research hypothesis: in the election campaign period of time, older politicians tweeted more about minimum wage than younger ones did. It should be noted that even if the proportion is bigger for over 40 years old MPs, it is still very small (roughly 0.00583) and the difference between the two groups is not major.
 
+To visualize the results in a better way I plotted the data through a histogram:
 
+![https://raw.githubusercontent.com/DataAccess2020/Capstone_Chiara_Moruzzi/main/Plots/Rplot_sm_pr_age_group.jpeg)](https://github.com/DataAccess2020/Capstone_Chiara_Moruzzi/blob/main/Plots/Rplot_sm_pr_age_group.jpeg?raw=true)
 
+## Conclusions
 
-Considering all these obstacles I faced, I decided to create a .dta dataset containing information about the XIX Legislatura Members of the Camera dei Deputati data; it was a really long process since I double checked each information I put, but I figured it would be a very useful tool both for mine and other researchers' future works. The dataset, as it is now, contains the following information for each parliamentary:
+To summarize what we learn from this research we can point out that, in contrast to the research hypothesis, we observe that, as regards the selected period of time, younger politicians do not seem more concerned then older ones about the introduction of a legal minimum wage in Italy. The aspect that surprised me the most was finding such a small proportion of tweets about this topic: I was aware it was not one of the key issues in the election campaign, but I expected legal minimum wage to be more relevant, especially considering the fact that Italy is one of the very few countries in Europe that still do not have one and this, as I said before, especially affect disadvantaged workers such as young people. In the future it would be interesting to evaluate if education or gender have an influence to the concern about minimum wage.
+
+## Appendix
+
+Considering all the obstacles I faced, I decided to create a .dta dataset containing information about the XIX Legislatura Members of the Camera dei Deputati data; it was a really long process since I double checked each information I put, but I figured it would be a very useful tool both for mine and other researchers' future works. The dataset, as it is now, contains the following information for each parliamentary:
 
 - Name and Surname;
 
@@ -127,25 +224,3 @@ I imported the data set in the folder "Data" hoping to improve it with more info
 
 
 
-
-
-
-
-
-
-
-
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
