@@ -19,8 +19,10 @@ The research hypothesis can be justified by the fact that legal minimum wage is 
 First of all I created two lists containing all 400 0f the Italian MPs separated by group:
 
 - Italian MP (under 40): with all the mebers of the Camera dei Deputati born in 1983 or after (48 members);
+<https://twitter.com/i/lists/1601560531244093440>
 
 - Italian MP (over 40): with all the mebers of the Camera dei Deputati born before 1983 (250 members).
+<https://twitter.com/i/lists/1601572364214583298>
 
 102 members are missing because I could not find them on twitter. To get all the information about age, education, party and twitter handles I used the following website: <https://www.camera.it/leg19/28> . Unfortunately, this website contains only a minority of the actual twitter handles of the parliamentarians, so for most of them I had to look them up autonomously. Before choosing whether to put them into the lists or not, I thoroughly checked each profile's description, posts, followers etc. to make sure those were the actual profiles and not homonyms, fan pages, news pages or anything else. As regards age, the website I linked provides a specific tool to divide MPs by age. First of all I tried to collect all the data in an automatized way, but I couldn't since I encountered a few difficulties I didn't manage to overcome:
 
@@ -211,6 +213,26 @@ Considering all the obstacles I faced, I decided to create a .dta dataset contai
 - Education level;
 
 - Gender.
+
+Through this dataset I managed to describe the distribution a bit better: first I created a variable for age and then I plotted the distribution. The average age for Italian members of the "Camera dei deputati" is 49.57 years old. The youngest parliamentary is 25 and the oldest one is 81 years old.
+
+```{r, eval=TRUE, echo=FALSE}
+library(tidyverse)
+library(rio)
+setwd ("C:\\Users\\chiar\\Desktop\\Università\\DAPS&CO\\DATA_ACCESS\\CAPSTONE\\Capstone_Chiara_Moruzzi\\Data")
+dep_XIX_leg <- import("dep_XIX_leg.dta")
+
+dep_XIX_leg$age <- 2022 - dep_XIX_leg$y_birth
+
+sum_age <- summary(dep_XIX_leg$age)
+print (sum_age)
+
+dep_XIX_leg %>%
+  ggplot( aes(x=age)) +
+  geom_density(fill="cadetblue1")+
+  scale_x_continuous(breaks = seq(1,100, by = 5))+
+  theme_bw()
+``` 
 
 I imported the data set in the folder "Data" hoping to improve it with more information in the future. Everyone who needs it is welcome to use it and update the data contained with more information.
 
