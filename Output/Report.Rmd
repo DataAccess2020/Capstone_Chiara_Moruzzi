@@ -6,6 +6,18 @@ date: "2022-12-22"
 output: html_document
 ---
 
+### Work insights
+
+- Number of commits:18
+  
+- Number of issues opened: 1
+
+- Number of pull requests open: 1
+
+- Number of pull requests accepted and merged: 1
+
+- Number of new branches opened: 1
+
 <https://github.com/DataAccess2020/Capstone_Chiara_Moruzzi>
 
 ## Introduction
