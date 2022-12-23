@@ -10,11 +10,124 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+The aim of my small research is to test whether younger politicians are more or less interest about the topic of the introduction of a legal minimum wage in Italy. To do so, I will examine the tweets of members of the Italian *Camera dei Deputati* divided in two age groups: under and over forty years old. I chose to focus on a three month period of time, which goes from 21 July 2022 (the day of the Draghis's Government crisis) to 24 September 2022 (the day before the elections for the XIX Legislatura).
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+The research hypothesis can be justified by the fact that legal minimum wage is a policy measure that should help disadvantages groups of workers, such as low-qualified workers, immigrants and young people. I decided to focus on age since, as emerged more and more in the last few years, there are not many policies to help young people to enter in the labour market in Italy, especially compared to other European countries.
+
+## Methodology
+
+First of all I created two lists containing all 400 0f the Italian MPs separated by group:
+
+- Italian MP (under 40): with all the mebers of the Camera dei Deputati born in 1983 or after (48 members);
+
+- Italian MP (over 40): with all the mebers of the Camera dei Deputati born before 1983 (250 members).
+
+102 members are missing because I could not find them on twitter. To get all the information about age, education, party and twitter handles I used the following website: <https://www.camera.it/leg19/28> . Unfortunately, this website contains only a minority of the actual twitter handles of the parliamentarians, so for most of them I had to look them up autonomously. Before choosing whether to put them into the lists or not, I thoroughly checked each profile's description, posts, followers etc. to make sure those were the actual profiles and not homonyms, fan pages, news pages or anything else. As regards age, the website I linked provides a specific tool to divide MPs by age. First of all I tried to collect all the data in an automatized way, but I couldn't since I encountered a few difficulties I didn't manage to overcome:
+
+- as I already said, only a few twitter handles were provided, leaving out most of the MPs from the analysis;
+
+- I could not isolate the age and transform it into a numerical variable, since the birth date was inside a string containing all the personal informationg given by the website;
+
+- I could not iterate the function to create a for loop or to use `lapply()` because the URL of the webpage changed based on letters and not number. I tried many times but I could not overcome this obstacle (example: <https://www.camera.it/leg19/28> is the link for page A, <https://www.camera.it/leg19/28?lettera=B> is the link for page B and so on).
+
+After authenticating to Twitter API, I downloaded information about each list members and put it in a specific summary table for both age groups. The two dataframes contain the following information: screen names, twitter handles, number of tweets and number of followers.
+
+```{r, echo=F, warning=FALSE, message=FALSE, eval=TRUE}
+library(rtweet)
+library(stringr)
+library(tidyverse)
+library(dplyr)
+
+options(scipen=999)
+aut <- rtweet_app()
+auth_save(aut, "chiaramoruzzi")
+auth_as("chiaramoruzzi")
+aut_token <- rtweet_app(token)
+auth_setup_default()
+```
+
+```{r, eval=TRUE, echo=TRUE}
+italian_MP_under40 = lists_members(
+  list_id = "1601560531244093440",
+  slug = NULL,
+  owner_user = NULL,
+  n = 48,
+  cursor = "-1",
+  token = NULL,
+  retryonratelimit = TRUE,
+  verbose = TRUE,
+  parse = TRUE,
+)
+
+DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle, MP_under40_followers, MP_under40_n_tweets)
+
+```
+
+```{r, eval=TRUE, echo=TRUE}
+italian_MP_over40 = lists_members(
+  list_id = "1601572364214583298",
+  slug = NULL,
+  owner_user = NULL,
+  n = 250,
+  cursor = "-1",
+  token = NULL,
+  retryonratelimit = TRUE,
+  verbose = TRUE,
+  parse = TRUE,
+)
+
+DF_MP_over40 <- tibble (MP_over40_names,MP_over40_t_handle, MP_over40_followers, MP_over40_n_tweets)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Considering all these obstacles I faced, I decided to create a .dta dataset containing information about the XIX Legislatura Members of the Camera dei Deputati data; it was a really long process since I double checked each information I put, but I figured it would be very useful tool both for mine and other researchers' future works. The dataset, as it is now, contains the following information for each parliamentary:
+
+- Name and Surname;
+
+- Party;
+
+- Year of birth;
+
+- Twitter handle (if there is one);
+
+- Education level;
+
+- Gender.
+
+I imported the data set in the folder "Data" hoping to improve it with more information in the future. Everyone who needs it is welcome to use it and update the data contained with more information.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r cars}
 summary(cars)
