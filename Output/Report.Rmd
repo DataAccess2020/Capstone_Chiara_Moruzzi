@@ -6,10 +6,6 @@ date: "2022-12-22"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 ## Introduction
 
 The aim of my small research is to test whether younger politicians are more or less interest about the topic of the introduction of a legal minimum wage in Italy. To do so, I will examine the tweets of members of the Italian *Camera dei Deputati* divided in two age groups: under and over forty years old. I chose to focus on a three month period of time, which goes from 21 July 2022 (the day of the Draghis's Government crisis) to 24 September 2022 (the day before the elections for the XIX Legislatura).
@@ -34,18 +30,16 @@ First of all I created two lists containing all 400 0f the Italian MPs separated
 
 After authenticating to Twitter API, I downloaded information about each list members and put it in a specific summary table for both age groups. The two dataframes contain the following information: screen names, twitter handles, number of tweets and number of followers.
 
-```{r, echo=F, warning=FALSE, message=FALSE, eval=TRUE}
+```{r setup, include=FALSE, eval=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "C:\\Users\\chiar\\Desktop\\Università\\DAPS&CO\\DATA_ACCESS\\CAPSTONE\\Capstone_Chiara_Moruzzi\\Scripts")
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, eval=TRUE}
 library(rtweet)
 library(stringr)
 library(tidyverse)
 library(dplyr)
-
-options(scipen=999)
-aut <- rtweet_app()
-auth_save(aut, "chiaramoruzzi")
-auth_as("chiaramoruzzi")
-aut_token <- rtweet_app(token)
-auth_setup_default()
 ```
 
 ```{r, eval=TRUE, echo=TRUE}
@@ -60,9 +54,17 @@ italian_MP_under40 = lists_members(
   verbose = TRUE,
   parse = TRUE,
 )
+```
 
+```{r, eval=TRUE, echo=FALSE}
+MP_under40_names = c(italian_MP_under40$name)
+MP_under40_t_handle = c(italian_MP_under40$screen_name)
+MP_under40_followers = c(italian_MP_under40$followers_count)
+MP_under40_n_tweets = c(italian_MP_under40$statuses_count) 
+```
+
+```{r, eval=TRUE, echo=TRUE}
 DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle, MP_under40_followers, MP_under40_n_tweets)
-
 ```
 
 ```{r, eval=TRUE, echo=TRUE}
@@ -77,8 +79,17 @@ italian_MP_over40 = lists_members(
   verbose = TRUE,
   parse = TRUE,
 )
+```
 
-DF_MP_over40 <- tibble (MP_over40_names,MP_over40_t_handle, MP_over40_followers, MP_over40_n_tweets)
+```{r, eval=TRUE, echo=FALSE}
+MP_over40_names = c(italian_MP_over40$name)
+MP_over40_t_handle = c(italian_MP_over40$screen_name)
+MP_over40_followers = c(italian_MP_over40$followers_count)
+MP_over40_n_tweets = c(italian_MP_over40$statuses_count) 
+```
+
+```{r, eval=TRUE, echo=TRUE}
+DF_MP_under40 <- tibble (MP_under40_names,MP_under40_t_handle, MP_under40_followers, MP_under40_n_tweets)
 ```
 
 
@@ -90,11 +101,7 @@ DF_MP_over40 <- tibble (MP_over40_names,MP_over40_t_handle, MP_over40_followers,
 
 
 
-
-
-
-
-Considering all these obstacles I faced, I decided to create a .dta dataset containing information about the XIX Legislatura Members of the Camera dei Deputati data; it was a really long process since I double checked each information I put, but I figured it would be very useful tool both for mine and other researchers' future works. The dataset, as it is now, contains the following information for each parliamentary:
+Considering all these obstacles I faced, I decided to create a .dta dataset containing information about the XIX Legislatura Members of the Camera dei Deputati data; it was a really long process since I double checked each information I put, but I figured it would be a very useful tool both for mine and other researchers' future works. The dataset, as it is now, contains the following information for each parliamentary:
 
 - Name and Surname;
 
